@@ -42,6 +42,7 @@ public class Parser{
                 }
                 x++;
             }
+            interf.flush();
         }catch(IOException e){};
     }
 }
