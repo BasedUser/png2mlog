@@ -78,25 +78,25 @@ public class Parser{
                     pictureR[x][y] = (rgb >> 16) & 0xFF; 
                     pictureG[x][y] = (rgb >> 8) & 0xFF; 
                     pictureB[x][y] = (rgb) & 0xFF;
-                    if((lines / maxInstructions) > ((lines-1) / maxInstructions)) {
+                    if(lines / maxInstructions > 0) {
                         interf.append("drawflush display1\n");
                         interf.flush();
                         d = new File("output"+String.valueOf(filesWritten)+".txt");
                         if(d.length() > 32767) {
-                            System.out.println("\033[1;31mCAUTION: \033[22;33mCurrent file output"+String.valueOf(filesWritten)+".txt has "+d.length()+"characters. You may not be able to import this mlog file into Mindustry, try a lower maxInstructions value.\033[22;39m");
+                            System.out.println("\033[1;31mCAUTION: \033[22;33mCurrent file output"+String.valueOf(filesWritten)+".txt has "+d.length()+" characters. You may not be able to import this mlog file into Mindustry, try a lower maxInstructions value.\033[22;39m");
                         }
                         filesWritten++;
                         interf = new FileWriter("output"+String.valueOf(filesWritten)+".txt");
                         lines = 0;
                         drawCalls = 0;
                     }
-                    if( (drawCalls / displayBufferSize) > ((drawCalls-1) / displayBufferSize)) {
+                    if((drawCalls+2) / displayBufferSize > 0) {
                         interf.append("drawflush display1\n");
                         lines++;
                         drawCalls = 0;
                     }
                     interf.append("draw color "+pictureR[x][y]+" "+pictureG[x][y]+" "+pictureB[x][y]+" 255 0\n");
-                    interf.append("draw rect "+x*mult+" "+(h-y-mult)*mult+" "+String.valueOf(mult)+" "+String.valueOf(mult)+" 0\n"); // two appends, for better readability
+                    interf.append("draw rect "+x*mult+" "+(h-y-1)*mult+" "+String.valueOf(mult)+" "+String.valueOf(mult)+" 0\n"); // two appends, for better readability
                     // side note, the reason there's h-y is because Mindustry starts its origin in the *bottom left* instead of top left, like BufferedImage.
                     // that's why we have to do this madness
                     lines += 2;
