@@ -78,7 +78,7 @@ public class Parser{
                     pictureR[x][y] = (rgb >> 16) & 0xFF; 
                     pictureG[x][y] = (rgb >> 8) & 0xFF; 
                     pictureB[x][y] = (rgb) & 0xFF;
-                    if((lines-1 / maxInstructions) > ((lines-2) / maxInstructions)) {
+                    if((lines / maxInstructions) > ((lines-1) / maxInstructions)) {
                         interf.append("drawflush display1\n");
                         interf.flush();
                         d = new File("output"+String.valueOf(filesWritten)+".txt");
@@ -87,16 +87,20 @@ public class Parser{
                         }
                         filesWritten++;
                         interf = new FileWriter("output"+String.valueOf(filesWritten)+".txt");
+                        lines = 0;
+                        drawCalls = 0;
                     }
                     if( (drawCalls / displayBufferSize) > ((drawCalls-1) / displayBufferSize)) {
                         interf.append("drawflush display1\n");
                         lines++;
+                        drawCalls = 0;
                     }
                     interf.append("draw color "+pictureR[x][y]+" "+pictureG[x][y]+" "+pictureB[x][y]+" 255 0\n");
                     interf.append("draw rect "+x*mult+" "+(h-y-mult)*mult+" "+String.valueOf(mult)+" "+String.valueOf(mult)+" 0\n"); // two appends, for better readability
                     // side note, the reason there's h-y is because Mindustry starts its origin in the *bottom left* instead of top left, like BufferedImage.
                     // that's why we have to do this madness
                     lines += 2;
+                    drawCalls += 2;
                     y++;
                 }
                 x++;
